@@ -1,0 +1,158 @@
+@import url('https://fonts.cdnfonts.com/css/gotham-pro');
+                
+
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(53,54,56);
+    font-family: 'Gotham Pro', sans-serif;
+}
+
+.container {
+    width: 775px;
+    margin: 0 auto;
+    padding-top: 72px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+    gap: 50px;
+}
+
+.timer {
+    width: 225px;
+    height: 120px;
+    background-color: #696969;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #9E9E9E;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 21px;
+    text-align: center;
+}
+
+.timer__counter {
+    border-bottom: 1px solid #9E9E9E;
+    width: 100%;
+    padding-top: 22px;
+    padding-bottom: 20px;
+}
+
+.timer__buttons {
+    display: flex;
+}
+
+.timer__buttons button{
+    background-color: rgba(0, 0, 0, 0);
+    padding-top: 10px;
+}
+
+.timer__buttons button:first-child{
+    margin-right: 44px;
+}
+.timer__buttons button:last-child{
+    position: relative;
+    right: 6px;
+}
+
+
+button {
+	cursor: pointer;
+    border: none;
+}
+
+.btn-add {
+    width: 225px;
+    height: 120px;
+    background: #696969;
+    color: #9E9E9E;
+    transition: 0.6s;
+
+}
+.btn-add:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+button:disabled {
+	background-color: #ddd;
+	color: #aaa;
+	cursor: not-allowed;
+}
+
+.start_pause__btn {
+    color: #9E9E9E;
+    transition: 0.5s;
+}
+
+.timer-active {
+    color: rgba(255, 255, 255, 1);
+}
+
+.timer-active .start_pause__btn{
+    position: relative;
+    left: 0px;
+    top: 3px;
+    color: rgba(255, 255, 255, 1);
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px) {
+    .container {
+        max-width: 260px;
+        padding-top: 109px;
+        grid-template-columns: 1fr;
+        gap: 80px;
+    }
+    
+    
+}
+
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .container {
+        min-width: 700px;
+        padding-top: 108px;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px 80px;
+    }
+    
+    .timer {
+        width: 335px;
+        height: 180px;
+        font-size: 34px;
+    }
+    
+    .timer__counter {
+        padding-top: 34px;
+        padding-bottom: 28px;
+    }
+    
+    .timer__buttons button{
+        padding-top: 28px;
+    }
+    
+    .timer__buttons button:first-child{
+        margin-right: 72px;
+    }
+    .timer__buttons button:last-child{
+        right: 0px;
+    }
+    
+    .btn-add {
+        width: 335px;
+        height: 180px;
+    }
+
+    .btn-add svg {
+        transform: scale(1.5);
+    }
+    .start_pause__btn {
+        transform: scale(1.5);
+    }
+    
+}
+

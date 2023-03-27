@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Таймеры</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<div id="app" class="container">
+		<div class="timer" v-for="(timer, index) in timers" :key="index" class="timer" :class="{ 'timer-active': timer.isRunning }">
+			<div class="timer__counter">{{ formatTime(timer.currentTime, timer.format) }}</div>
+			<div class="timer__buttons">
+				<button @click="startPauseTimer(timer)" class="start_pause__btn">
+                    <svg v-if="timer.isRunning" viewBox="0 0 24 24" width="27" height="27">
+                      <path fill="currentColor" d="M6 4h2v16H6zm10 0h2v16h-2z"></path>
+                    </svg>
+                    <svg v-else viewBox="0 0 24 24" width="40" height="34">
+                      <path fill="currentColor" d="M8 5v14l11-7z"></path>
+                    </svg>
+                </button>
+                  
+                  
+                <button @click="resetTimer(timer)" class="start_pause__btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="20" height="20" fill="currentColor"/>
+                    </svg>
+                </button>
+                  
+			</div>
+		</div>
+		<button class="btn-add" @click="addTimer">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8.5" width="3" height="20" fill="currentColor"/>
+                <rect y="11.5" width="3" height="20" transform="rotate(-90 0 11.5)" fill="currentColor"/>
+            </svg>
+        </button>
+	</div>
+
+	<script src="https://unpkg.com/vue@3.2.19/dist/vue.global.js"></script>
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					timers: [
+						{ format: 'seconds', currentTime: 0, isRunning: false },
+						{ format: 'minutes', currentTime: 0, isRunning: false },
+						{ format: 'hours', currentTime: 0, isRunning: false }
+					]
+				}
+			},
+			methods: {
+				getIntervalByFormat(format) {
+                    if (format === 'seconds') {
+                        return 1000
+                    } else if (format === 'minutes') {
+                        return 1000
+                    } else if (format === 'hours') {
+                        return 1000
+                    }
+                },
+
+				formatTime(time, format) {
+                    const date = new Date(time + new Date().getTimezoneOffset() * 60 * 1000)
+                    let hours = date.getHours()
+                    let minutes = date.getMinutes()
+                    let seconds = date.getSeconds()
+
+                    if (format === 'seconds') {
+                        return `${seconds}`
+                    } else if (format === 'minutes') {
+                        return `${minutes}:${seconds.toString().padStart(2, '0')}`
+                    } else if (format === 'hours') {
+                        return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+                    }
+                },
+
+				startPauseTimer(timer) {
+					if (timer.isRunning) {
+						clearInterval(timer.intervalId)
+						timer.isRunning = false
+					} else {
+						timer.intervalId = setInterval(() => {
+							timer.currentTime += this.getIntervalByFormat(timer.format)
+						}, this.getIntervalByFormat(timer.format))
+						timer.isRunning = true
+					}
+				},
+				resetTimer(timer) {
+					clearInterval(timer.intervalId)
+					timer.currentTime = 0
+					timer.isRunning = false
+				},
+				addTimer() {
+                const format = prompt('Введите формат таймера (seconds/minutes/hours)')
+                if (format === 'seconds' || format === 'minutes' || format === 'hours') {
+                    this.timers.push({ format, currentTime: 0, isRunning: false })
+                } else {
+                    alert('Неверный формат таймера!')
+                }
+                }
+			}
+		})
+
+		app.mount('#app')
+	</script>
+</body>
