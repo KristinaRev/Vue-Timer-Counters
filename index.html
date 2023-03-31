@@ -9,7 +9,7 @@
 <body>
 	<div id="app" class="container">
 		<div class="timer" v-for="(timer, index) in timers" :key="index" class="timer" :class="{ 'timer-active': timer.isRunning }">
-			<div class="timer__counter">{{ formatTime(timer.currentTime, timer.format) }}</div>
+			<div class="timer__counter">{{ timer.displayTime }}</div>
 			<div class="timer__buttons">
 				<button @click="startPauseTimer(timer)" class="start_pause__btn">
                     <svg v-if="timer.isRunning" viewBox="0 0 24 24" width="27" height="27">
@@ -50,44 +50,40 @@
 				}
 			},
 			methods: {
-				getIntervalByFormat(format) {
-                    if (format === 'seconds') {
-                        return 1000
-                    } else if (format === 'minutes') {
-                        return 1000
-                    } else if (format === 'hours') {
-                        return 1000
-                    }
-                },
+				updateTimers() {
+					requestAnimationFrame(this.updateTimers)
 
-				formatTime(time, format) {
-                    const date = new Date(time + new Date().getTimezoneOffset() * 60 * 1000)
-                    let hours = date.getHours()
-                    let minutes = date.getMinutes()
-                    let seconds = date.getSeconds()
+					this.timers.forEach((timer) => {
+						if (timer.isRunning) {
+							timer.currentTime += 16 // 16 мс = 1 кадр
 
-                    if (format === 'seconds') {
-                        return `${seconds}`
-                    } else if (format === 'minutes') {
-                        return `${minutes}:${seconds.toString().padStart(2, '0')}`
-                    } else if (format === 'hours') {
-                        return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-                    }
-                },
+							// Дополнительный код для форматирования времени
+							let totalSeconds = Math.floor(timer.currentTime / 1000)
+							let hours = Math.floor(totalSeconds / 3600)
+							let minutes = Math.floor((totalSeconds % 3600) / 60)
+							let seconds = totalSeconds % 60
+
+
+							if (timer.format === 'seconds') {
+								timer.displayTime = `${seconds}`
+							} else if (timer.format === 'minutes') {
+								timer.displayTime = `${minutes}:${seconds.toString().padStart(2, '0')}`
+							} else if (timer.format === 'hours') {
+								timer.displayTime = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+							}
+						}
+					})
+				},
 
 				startPauseTimer(timer) {
 					if (timer.isRunning) {
-						clearInterval(timer.intervalId)
 						timer.isRunning = false
 					} else {
-						timer.intervalId = setInterval(() => {
-							timer.currentTime += this.getIntervalByFormat(timer.format)
-						}, this.getIntervalByFormat(timer.format))
 						timer.isRunning = true
+						requestAnimationFrame(this.updateTimers)
 					}
 				},
 				resetTimer(timer) {
-					clearInterval(timer.intervalId)
 					timer.currentTime = 0
 					timer.isRunning = false
 				},
